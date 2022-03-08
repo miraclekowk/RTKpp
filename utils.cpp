@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <signal.h>
+#include <stdlib.h>
 
 #include "utils.h"
 
@@ -63,5 +65,15 @@ int read_conf(string filename, RTK_config cfg){
 
     infile.close();
     return RTK_CONF_OK;
+}
+
+//屏蔽SIGPIPE信号，防止客户端断连后服务端异常关闭
+void handle_for_sigpipe(){
+    //struct sigaction* sa = (struct sigaction*) malloc(sizeof(struct sigaction));
+    struct sigaction sa;
+    sa.sa_handler = SIG_IGN;
+    sa.sa_flags = 0;
+    if(sigaction(SIGPIPE,&sa,NULL))
+        return;
 }
 
