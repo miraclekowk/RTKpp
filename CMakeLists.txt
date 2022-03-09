@@ -3,4 +3,5 @@ project(RTKpp)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(RTKpp main.cpp utils.cpp utils.h)
+
+add_executable(RTKpp main.cpp utils.cpp utils.h rtk_request.cpp rtk_request.h)
