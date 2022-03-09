@@ -5,8 +5,9 @@
 #ifndef RTKPP_RTK_REQUEST_H
 #define RTKPP_RTK_REQUEST_H
 
-#include <string>
-#include <unordered_map>
+//#include <string>
+//#include <unordered_map>
+#include "stdafx.h"
 
 #define RTK_AGAIN EAGAIN
 

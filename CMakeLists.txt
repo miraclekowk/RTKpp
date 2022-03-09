@@ -4,4 +4,8 @@ project(RTKpp)
 set(CMAKE_CXX_STANDARD 11)
 
 
-add_executable(RTKpp main.cpp utils.cpp utils.h rtk_request.cpp rtk_request.h)
+add_executable(RTKpp main.cpp utils.cpp utils.h rtk_request.cpp rtk_request.h stdafx.h)
+add_subdirectory(./googletest)
+include_directories(${PROJECT_SOURCE_DIR}/src/include ./googletest/include)
+link_directories(${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/googletest)
+target_link_libraries(${PROJECT_NAME} gtest)

@@ -42,15 +42,74 @@ include CMakeFiles/rules.ninja
 cmake_ninja_workdir = /home/nins/Code/RTKpp/cmake-build-debug/
 
 #############################################
-# Utility command for rebuild_cache
+# Utility command for install/strip
 
-build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nins/Code/RTKpp -B/home/nins/Code/RTKpp/cmake-build-debug
-  DESC = Running CMake to regenerate build system...
+build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
   pool = console
   restat = 1
 
-build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+build install/strip: phony CMakeFiles/install/strip.util
+
+
+#############################################
+# Utility command for install/local
+
+build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install/local: phony CMakeFiles/install/local.util
+
+# =============================================================================
+# Object build statements for EXECUTABLE target RTKpp
+
+
+#############################################
+# Order-only phony target for RTKpp
+
+build cmake_object_order_depends_target_RTKpp: phony || cmake_object_order_depends_target_gtest
+
+build CMakeFiles/RTKpp.dir/main.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/main.cpp || cmake_object_order_depends_target_RTKpp
+  DEP_FILE = CMakeFiles/RTKpp.dir/main.cpp.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I/home/nins/Code/RTKpp/src/include -I/home/nins/Code/RTKpp/./googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = CMakeFiles/RTKpp.dir
+  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
+
+build CMakeFiles/RTKpp.dir/utils.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/utils.cpp || cmake_object_order_depends_target_RTKpp
+  DEP_FILE = CMakeFiles/RTKpp.dir/utils.cpp.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I/home/nins/Code/RTKpp/src/include -I/home/nins/Code/RTKpp/./googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = CMakeFiles/RTKpp.dir
+  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
+
+build CMakeFiles/RTKpp.dir/rtk_request.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/rtk_request.cpp || cmake_object_order_depends_target_RTKpp
+  DEP_FILE = CMakeFiles/RTKpp.dir/rtk_request.cpp.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I/home/nins/Code/RTKpp/src/include -I/home/nins/Code/RTKpp/./googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = CMakeFiles/RTKpp.dir
+  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target RTKpp
+
+
+#############################################
+# Link the executable RTKpp
+
+build RTKpp: CXX_EXECUTABLE_LINKER__RTKpp_Debug CMakeFiles/RTKpp.dir/main.cpp.o CMakeFiles/RTKpp.dir/utils.cpp.o CMakeFiles/RTKpp.dir/rtk_request.cpp.o | lib/libgtest.a || lib/libgtest.a
+  FLAGS = -g
+  LINK_LIBRARIES = lib/libgtest.a  -lpthread
+  OBJECT_DIR = CMakeFiles/RTKpp.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = RTKpp
+  TARGET_PDB = RTKpp.dbg
 
 
 #############################################
@@ -63,51 +122,392 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 
 build edit_cache: phony CMakeFiles/edit_cache.util
 
-# =============================================================================
-# Object build statements for EXECUTABLE target RTKpp
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nins/Code/RTKpp -B/home/nins/Code/RTKpp/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 
 #############################################
-# Order-only phony target for RTKpp
+# Utility command for install
 
-build cmake_object_order_depends_target_RTKpp: phony || CMakeFiles/RTKpp.dir
+build CMakeFiles/install.util: CUSTOM_COMMAND all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
 
-build CMakeFiles/RTKpp.dir/main.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/main.cpp || cmake_object_order_depends_target_RTKpp
-  DEP_FILE = CMakeFiles/RTKpp.dir/main.cpp.o.d
-  FLAGS = -g -std=gnu++11
-  OBJECT_DIR = CMakeFiles/RTKpp.dir
-  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
-
-build CMakeFiles/RTKpp.dir/utils.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/utils.cpp || cmake_object_order_depends_target_RTKpp
-  DEP_FILE = CMakeFiles/RTKpp.dir/utils.cpp.o.d
-  FLAGS = -g -std=gnu++11
-  OBJECT_DIR = CMakeFiles/RTKpp.dir
-  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
-
-build CMakeFiles/RTKpp.dir/rtk_request.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/rtk_request.cpp || cmake_object_order_depends_target_RTKpp
-  DEP_FILE = CMakeFiles/RTKpp.dir/rtk_request.cpp.o.d
-  FLAGS = -g -std=gnu++11
-  OBJECT_DIR = CMakeFiles/RTKpp.dir
-  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target RTKpp
+build install: phony CMakeFiles/install.util
 
 
 #############################################
-# Link the executable RTKpp
+# Utility command for list_install_components
 
-build RTKpp: CXX_EXECUTABLE_LINKER__RTKpp_Debug CMakeFiles/RTKpp.dir/main.cpp.o CMakeFiles/RTKpp.dir/utils.cpp.o CMakeFiles/RTKpp.dir/rtk_request.cpp.o
-  FLAGS = -g
-  OBJECT_DIR = CMakeFiles/RTKpp.dir
+build list_install_components: phony
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/nins/Code/RTKpp/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for install/strip
+
+build googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build googletest/install/strip: phony googletest/CMakeFiles/install/strip.util
+
+
+#############################################
+# Utility command for install/local
+
+build googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build googletest/install/local: phony googletest/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build googletest/edit_cache: phony googletest/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nins/Code/RTKpp -B/home/nins/Code/RTKpp/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build googletest/rebuild_cache: phony googletest/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build googletest/list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build googletest/CMakeFiles/install.util: CUSTOM_COMMAND googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build googletest/install: phony googletest/CMakeFiles/install.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/nins/Code/RTKpp/googletest/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for install/strip
+
+build googletest/googlemock/CMakeFiles/install/strip.util: CUSTOM_COMMAND googletest/googlemock/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build googletest/googlemock/install/strip: phony googletest/googlemock/CMakeFiles/install/strip.util
+
+
+#############################################
+# Utility command for install/local
+
+build googletest/googlemock/CMakeFiles/install/local.util: CUSTOM_COMMAND googletest/googlemock/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build googletest/googlemock/install/local: phony googletest/googlemock/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install
+
+build googletest/googlemock/CMakeFiles/install.util: CUSTOM_COMMAND googletest/googlemock/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build googletest/googlemock/install: phony googletest/googlemock/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build googletest/googlemock/list_install_components: phony
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gmock_main
+
+
+#############################################
+# Order-only phony target for gmock_main
+
+build cmake_object_order_depends_target_gmock_main: phony || cmake_object_order_depends_target_gmock cmake_object_order_depends_target_gtest
+
+build googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o: CXX_COMPILER__gmock_main_Debug /home/nins/Code/RTKpp/googletest/googlemock/src/gmock_main.cc || cmake_object_order_depends_target_gmock_main
+  DEP_FILE = googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o.d
+  FLAGS = -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++11
+  INCLUDES = -isystem /home/nins/Code/RTKpp/googletest/googlemock/include -isystem /home/nins/Code/RTKpp/googletest/googlemock -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = googletest/googlemock/CMakeFiles/gmock_main.dir
+  OBJECT_FILE_DIR = googletest/googlemock/CMakeFiles/gmock_main.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gmock_main
+
+
+#############################################
+# Link the static library lib/libgmock_main.a
+
+build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o || lib/libgmock.a lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = googletest/googlemock/CMakeFiles/gmock_main.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = RTKpp
-  TARGET_PDB = RTKpp.dbg
+  TARGET_FILE = lib/libgmock_main.a
+  TARGET_PDB = gmock_main.a.dbg
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gmock
+
+
+#############################################
+# Order-only phony target for gmock
+
+build cmake_object_order_depends_target_gmock: phony || cmake_object_order_depends_target_gtest
+
+build googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o: CXX_COMPILER__gmock_Debug /home/nins/Code/RTKpp/googletest/googlemock/src/gmock-all.cc || cmake_object_order_depends_target_gmock
+  DEP_FILE = googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o.d
+  FLAGS = -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++11
+  INCLUDES = -I/home/nins/Code/RTKpp/googletest/googlemock/include -I/home/nins/Code/RTKpp/googletest/googlemock -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = googletest/googlemock/CMakeFiles/gmock.dir
+  OBJECT_FILE_DIR = googletest/googlemock/CMakeFiles/gmock.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gmock
+
+
+#############################################
+# Link the static library lib/libgmock.a
+
+build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_Debug googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o || lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = googletest/googlemock/CMakeFiles/gmock.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = lib/libgmock.a
+  TARGET_PDB = gmock.a.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build googletest/googlemock/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build googletest/googlemock/edit_cache: phony googletest/googlemock/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build googletest/googlemock/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nins/Code/RTKpp -B/home/nins/Code/RTKpp/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build googletest/googlemock/rebuild_cache: phony googletest/googlemock/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /home/nins/Code/RTKpp/googletest/googlemock/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for install/strip
+
+build googletest/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND googletest/googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build googletest/googletest/install/strip: phony googletest/googletest/CMakeFiles/install/strip.util
+
+
+#############################################
+# Utility command for install/local
+
+build googletest/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND googletest/googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build googletest/googletest/install/local: phony googletest/googletest/CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install
+
+build googletest/googletest/CMakeFiles/install.util: CUSTOM_COMMAND googletest/googletest/all
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build googletest/googletest/install: phony googletest/googletest/CMakeFiles/install.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build googletest/googletest/list_install_components: phony
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gtest_main
+
+
+#############################################
+# Order-only phony target for gtest_main
+
+build cmake_object_order_depends_target_gtest_main: phony || cmake_object_order_depends_target_gtest
+
+build googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o: CXX_COMPILER__gtest_main_Debug /home/nins/Code/RTKpp/googletest/googletest/src/gtest_main.cc || cmake_object_order_depends_target_gtest_main
+  DEP_FILE = googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o.d
+  FLAGS = -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++11
+  INCLUDES = -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = googletest/googletest/CMakeFiles/gtest_main.dir
+  OBJECT_FILE_DIR = googletest/googletest/CMakeFiles/gtest_main.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gtest_main
+
+
+#############################################
+# Link the static library lib/libgtest_main.a
+
+build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o || lib/libgtest.a
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = googletest/googletest/CMakeFiles/gtest_main.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = lib/libgtest_main.a
+  TARGET_PDB = gtest_main.a.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build googletest/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build googletest/googletest/edit_cache: phony googletest/googletest/CMakeFiles/edit_cache.util
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target gtest
+
+
+#############################################
+# Order-only phony target for gtest
+
+build cmake_object_order_depends_target_gtest: phony || googletest/googletest/CMakeFiles/gtest.dir
+
+build googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o: CXX_COMPILER__gtest_Debug /home/nins/Code/RTKpp/googletest/googletest/src/gtest-all.cc || cmake_object_order_depends_target_gtest
+  DEP_FILE = googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o.d
+  FLAGS = -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++11
+  INCLUDES = -I/home/nins/Code/RTKpp/googletest/googletest/include -I/home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = googletest/googletest/CMakeFiles/gtest.dir
+  OBJECT_FILE_DIR = googletest/googletest/CMakeFiles/gtest.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target gtest
+
+
+#############################################
+# Link the static library lib/libgtest.a
+
+build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_Debug googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = googletest/googletest/CMakeFiles/gtest.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = lib/libgtest.a
+  TARGET_PDB = gtest.a.dbg
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build googletest/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest && /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/bin/cmake --regenerate-during-build -S/home/nins/Code/RTKpp -B/home/nins/Code/RTKpp/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build googletest/googletest/rebuild_cache: phony googletest/googletest/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
 # Target aliases.
+
+build gmock: phony lib/libgmock.a
+
+build gmock_main: phony lib/libgmock_main.a
+
+build gtest: phony lib/libgtest.a
+
+build gtest_main: phony lib/libgtest_main.a
+
+build libgmock.a: phony lib/libgmock.a
+
+build libgmock_main.a: phony lib/libgmock_main.a
+
+build libgtest.a: phony lib/libgtest.a
+
+build libgtest_main.a: phony lib/libgtest_main.a
 
 # =============================================================================
 # Folder targets.
@@ -117,7 +517,28 @@ build RTKpp: CXX_EXECUTABLE_LINKER__RTKpp_Debug CMakeFiles/RTKpp.dir/main.cpp.o 
 #############################################
 # Folder: /home/nins/Code/RTKpp/cmake-build-debug
 
-build all: phony RTKpp
+build all: phony RTKpp googletest/all
+
+# =============================================================================
+
+#############################################
+# Folder: /home/nins/Code/RTKpp/cmake-build-debug/googletest
+
+build googletest/all: phony googletest/googlemock/all
+
+# =============================================================================
+
+#############################################
+# Folder: /home/nins/Code/RTKpp/cmake-build-debug/googletest/googlemock
+
+build googletest/googlemock/all: phony lib/libgmock_main.a lib/libgmock.a googletest/googletest/all
+
+# =============================================================================
+
+#############################################
+# Folder: /home/nins/Code/RTKpp/cmake-build-debug/googletest/googletest
+
+build googletest/googletest/all: phony lib/libgtest_main.a lib/libgtest.a
 
 # =============================================================================
 # Built-in targets
@@ -126,14 +547,14 @@ build all: phony RTKpp
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../googletest/CMakeLists.txt ../googletest/googlemock/CMakeLists.txt ../googletest/googlemock/cmake/gmock.pc.in ../googletest/googlemock/cmake/gmock_main.pc.in ../googletest/googletest/CMakeLists.txt ../googletest/googletest/cmake/Config.cmake.in ../googletest/googletest/cmake/gtest.pc.in ../googletest/googletest/cmake/gtest_main.pc.in ../googletest/googletest/cmake/internal_utils.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeDependentOption.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakePackageConfigHelpers.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPython.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPython/Support.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/GNUInstallDirs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../googletest/CMakeLists.txt ../googletest/googlemock/CMakeLists.txt ../googletest/googlemock/cmake/gmock.pc.in ../googletest/googlemock/cmake/gmock_main.pc.in ../googletest/googletest/CMakeLists.txt ../googletest/googletest/cmake/Config.cmake.in ../googletest/googletest/cmake/gtest.pc.in ../googletest/googletest/cmake/gtest_main.pc.in ../googletest/googletest/cmake/internal_utils.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCXXInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeDependentOption.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeGenericSystem.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakePackageConfigHelpers.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckIncludeFile.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/CheckLibraryExists.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Compiler/GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPackageMessage.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPython.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindPython/Support.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/FindThreads.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/GNUInstallDirs.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-C.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU-CXX.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux-GNU.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/Linux.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/Platform/UnixPaths.cmake /opt/apps/com.jetbrains.clion/files/bin/cmake/linux/share/cmake-3.21/Modules/WriteBasicConfigVersionFile.cmake CMakeCache.txt CMakeFiles/3.21.1/CMakeCCompiler.cmake CMakeFiles/3.21.1/CMakeCXXCompiler.cmake CMakeFiles/3.21.1/CMakeSystem.cmake: phony
 
 
 #############################################

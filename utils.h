@@ -5,9 +5,8 @@
 #ifndef RTKPP_UTILS_H
 #define RTKPP_UTILS_H
 
-#include <string.h>
-#include <string>
-
+//引入公有头
+#include "stdafx.h"
 
 
 

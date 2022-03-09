@@ -81,6 +81,9 @@ int rtk_request::parse_request_line() {
 
                 //切换state状态
                 cur_state = sw_method;
+                tmp_method.push_back(buff[pi]);
+                break; //move pointer
+
             case sw_method:
 
                 this->method = RTK_HTTP_UNKNOW; //default method
@@ -94,17 +97,17 @@ int rtk_request::parse_request_line() {
 
                     int len = tmp_method.length();
 
-                    //可以拼成GET,POST,HEAD
-                    if( len == 3){
-                        if(tmp_method == "GET"){
+                    //可以拼成GET ,POST ,HEAD (注意方法后都有空格)
+                    if( len == 4){
+                        if(tmp_method == "GET "){
                             this->method = RTK_HTTP_GET;
                         }else{
                             break; //buff_point to next
                         }
-                    }else if(len == 4){
-                        if(tmp_method == "POST"){
+                    }else if(len == 5){
+                        if(tmp_method == "POST "){
                             this->method = RTK_HTTP_POST;
-                        }else if(tmp_method == "HEAD"){
+                        }else if(tmp_method == "HEAD "){
                             this->method = RTK_HTTP_HEAD;
                         }else{
                             break;
@@ -159,6 +162,7 @@ int rtk_request::parse_request_line() {
                 }else{
                     return RTK_HTTP_PARSE_INVALID_REQUEST;
                 }
+                break;
 
             case sw_http_HT:
                 if(ch == 'T'){
@@ -188,13 +192,13 @@ int rtk_request::parse_request_line() {
                 if(ch > '0' && ch < '9'){
                     this->http_major = ch - '0';
                     cur_state = sw_major_digit;
-                }else{
-                    break;
                 }
+                    break;
+
 
             case sw_major_digit:
                 if(ch == '.'){
-                    cur_state = sw_minor_digit;
+                    cur_state = sw_first_minor_digit;
                     break;
                 }
 
@@ -202,8 +206,16 @@ int rtk_request::parse_request_line() {
                     return RTK_HTTP_PARSE_INVALID_REQUEST;
                 }
                 this->http_major = this->http_major * 10 + (ch - '0');
+                break;
 
             case sw_first_minor_digit:
+                if(ch < '0' || ch > '9')
+                    return RTK_HTTP_PARSE_INVALID_REQUEST;
+                this->http_minor = ch - '0';
+                cur_state = sw_minor_digit;
+                break;
+
+            case sw_minor_digit:
                 if(ch == CR){
                     cur_state = sw_almost_done;
                     break;
@@ -220,6 +232,7 @@ int rtk_request::parse_request_line() {
                     return RTK_HTTP_PARSE_INVALID_REQUEST;
 
                 this->http_minor = this->http_minor * 10 + (ch - '0');
+                break;
 
             case sw_spaces_after_digit:
                 if(ch == ' '){
@@ -272,21 +285,23 @@ void rtk_request::close() {
 };
 
 void rtk_request::test_make_bufs() {
-    std::string str = " GET http://baidu.com/example/xxx/4?key=abc HTTP  1.12";
+    //uri是一个本地的
+    std::string str = "GET  /home/x/4?key=abc HTTP/1.12";
     for(int i = 0;i < str.length();i++){
         this->buff[i] = str[i];
     }
+    this->last = str.length();
+}
+
+#ifdef DEBUG_MODE
+
+TEST(TestCase,test_prase_request_line){
+    rtk_request rq("../");
+    rq.test_make_bufs();
+
+
+    EXPECT_EQ(0,rq.parse_request_line());
 }
 
 
-//int main(){
-//    rtk_request rq("./");
-//    rq.test_make_bufs();
-//
-//    rq.parse_request_line();
-//
-//    printf("hi");
-//
-//    return 0;
-//
-//}
+#endif
