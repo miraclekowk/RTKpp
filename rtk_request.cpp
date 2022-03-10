@@ -39,6 +39,7 @@ rtk_request::~rtk_request() {
 
 };
 
+//通过switch-case + enum{流程字段} 来控制可中断读取
 int rtk_request::parse_request_line() {
     enum{
         sw_start = 0,
@@ -59,10 +60,11 @@ int rtk_request::parse_request_line() {
     }state;
     int cur_state = this->state;
 
-    //ch 当前字符,*p当前指针,*m
-    u_char ch,*p,*m;
+    //ch 当前字符,*p当前指针
+    u_char ch,*p;
     size_t pi;   //point index
     std::string tmp_method = "";
+    std::string tmp_uri = "";
 
     for(pi = this->pos ;pi < this->last;pi++){
         //p为指向当前地址的指针，循环读取buff
@@ -125,6 +127,7 @@ int rtk_request::parse_request_line() {
             case sw_spaces_before_uri:
                 if(ch == '/'){
                     this->uri_start = p + 1;  //uri begin
+                    tmp_uri.push_back(ch);
                     cur_state = sw_after_slash_in_uri;
                     break;
                 }
@@ -140,6 +143,7 @@ int rtk_request::parse_request_line() {
                 //uri 形如 http://baidu.com/example/xxx/4?key=abc space 以空格做结束划分
                 if(ch == ' '){
                     this->uri_end = p;
+                    this->uri = tmp_uri;
                     cur_state = sw_http;
                     break;
                 }
@@ -273,11 +277,126 @@ int rtk_request::parse_request_line() {
 };
 
 int rtk_request::parse_request_body() {
+    ///colon -- 冒号
+    enum{
+        sw_start = 0,
+        sw_key,
+        sw_spaces_before_colon,
+        sw_spaces_after_colon,
+        sw_value,
+        sw_cr,
+        sw_crlf,
+        sw_crlfcr
+    }state;
 
+    int cur_state = this->state;
+    u_char ch,*p;
+    size_t pi;
+
+    std::string cur_key,cur_value;
+    for(pi = this->pos;pi < this->last;pi++){
+        p = (u_char*)&(this->buff[pi % MAX_BUF]);
+        ch = *p;
+
+        switch (cur_state) {
+            case sw_start:
+                if(ch == CR || ch == LF){
+                    break;
+                }
+                cur_key.push_back(ch);
+                cur_state = sw_key;
+                break;
+
+            case sw_key:
+                //解析形如key :value
+                if(' ' == ch){
+                    //key已结束，根据情况跳转
+                    cur_state = sw_spaces_before_colon;
+                    break;
+                }else if(':' == ch){
+                    //已经是冒号了，判断冒号后空格
+                    cur_state = sw_spaces_after_colon;
+                    break;
+                }
+                //常规字符是key的延伸
+                cur_key.push_back(ch);
+                break;
+
+            case sw_spaces_before_colon:
+                if(' ' == ch){
+                    break;
+                }else if(':' == ch){
+                    cur_state = sw_spaces_after_colon;
+                    break;
+                }else{
+                    return RTK_HTTP_PARSE_INVALID_HEADER;
+                }
+
+            case sw_spaces_after_colon:
+                if(' ' == ch){
+                    break;
+                }
+                cur_state = sw_value;
+                //value开始了，开始记录
+                cur_value.push_back(ch);
+                break;
+
+            case sw_value:
+                //遇到 \r \n说明value结束了
+                if(ch == CR){
+                    cur_state = sw_cr;
+                    break;
+                }else if(ch == LF){
+                    cur_state = sw_crlf;
+                    break;
+                }
+                //否则继续延伸value
+                cur_value.push_back(ch);
+                break;
+
+            case sw_cr:
+                // \r\n情况
+                if(ch == LF){
+                    cur_state = sw_crlf;
+                    this->head_list.insert({cur_key,cur_value}); //加入键值对
+                    cur_key.clear();
+                    cur_value.clear();
+                    break;
+                }else{
+                    return RTK_HTTP_PARSE_INVALID_HEADER;
+                }
+
+            case sw_crlf:
+                if(ch == CR){
+                    cur_state = sw_crlfcr;
+                }else{
+                    cur_key.clear();
+                    cur_key.push_back(ch); //开始记录新key
+                    cur_state = sw_key;
+                }
+                break;
+
+            case sw_crlfcr:
+                if(ch == LF){
+                    goto done;
+                }else{
+                    return RTK_HTTP_PARSE_INVALID_HEADER;
+                }
+        }
+    }
+
+    this->pos = pi;
+    this->state = cur_state;
+    return RTK_AGAIN;
+
+    done:
+    this->pos = pi+1;
+    this->state = sw_start;
+    return 0;
 };
 
 int rtk_request::parse_uri() {
-
+    //uri-model: /home/xxx/index.html or /home/xxx/abc 需自动补齐index.html
 };
 
 void rtk_request::close() {
@@ -286,7 +405,10 @@ void rtk_request::close() {
 
 void rtk_request::test_make_bufs() {
     //uri是一个本地的
-    std::string str = "GET  /home/x/4?key=abc HTTP/1.12";
+    //std::string str = "GET  /home/x/4?key=abc HTTP/1.12";
+    std::string  str = "name  : mi"
+                       "time :19"
+                       "id:6   ";
     for(int i = 0;i < str.length();i++){
         this->buff[i] = str[i];
     }
@@ -301,6 +423,14 @@ TEST(TestCase,test_prase_request_line){
 
 
     EXPECT_EQ(0,rq.parse_request_line());
+}
+
+TEST(TestCase,test2_prase_request_body){
+    rtk_request rq("../");
+    rq.test_make_bufs();
+    rq.parse_request_body();
+
+    EXPECT_EQ(0,rq.parse_request_body());
 }
 
 

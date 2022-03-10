@@ -35,6 +35,7 @@ extern std::unordered_map<std::string,std::string> rtk_mime_type;
 class rtk_request{
 private:
     std::string root;
+    std::string uri;
     int method;
     int fd;
     int epoll_fd;
@@ -48,8 +49,11 @@ private:
     void* request_end;
     void* uri_start;
     void* uri_end;
+
+
     int http_major;
     int http_minor;
+
 
     std::unordered_map<std::string,std::string> head_list; //存储请求头具体类别
 
