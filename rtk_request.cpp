@@ -147,6 +147,7 @@ int rtk_request::parse_request_line() {
                     cur_state = sw_http;
                     break;
                 }
+                tmp_uri.push_back(ch);
                 break;
 
             case sw_http:
@@ -395,8 +396,27 @@ int rtk_request::parse_request_body() {
     return 0;
 };
 
-int rtk_request::parse_uri() {
-    //uri-model: /home/xxx/index.html or /home/xxx/abc 需自动补齐index.html
+std::string rtk_request::parse_uri() {
+    //uri-model: /home/xxx/index.html?abcd or /home/xxx/abc?abc 需自动补齐index.html
+    auto delim_pos = this->uri.find('?');
+    int file_len = (delim_pos == std::string::npos)?uri.length():delim_pos;
+
+    std::string filename = this->uri.substr(0,file_len);
+    //check path have a point?
+    int last_point = filename.find('.');
+    //add env root before uri
+    filename = this->root + filename;
+
+    //path ending,add slash
+    if(last_point == std::string::npos && (filename[filename.length() - 1] != '/')){
+        filename += '/';
+    }
+    //default view index.html
+    if(filename[filename.length() - 1] == '/'){
+        filename += "index.html";
+    }
+
+    return filename;
 };
 
 void rtk_request::close() {
@@ -405,8 +425,8 @@ void rtk_request::close() {
 
 void rtk_request::test_make_bufs() {
     //uri是一个本地的
-    //std::string str = "GET  /home/x/4?key=abc HTTP/1.12";
-    std::string  str = "name  : mi"
+    std::string str = "GET  /home/x/4?key=abc HTTP/1.12";
+    //std::string  str = "name  : mi"
                        "time :19"
                        "id:6   ";
     for(int i = 0;i < str.length();i++){
@@ -431,6 +451,14 @@ TEST(TestCase,test2_prase_request_body){
     rq.parse_request_body();
 
     EXPECT_EQ(0,rq.parse_request_body());
+}
+
+TEST(TestCase,test3_prase_uri){
+    rtk_request rq("../");
+    rq.test_make_bufs();
+    rq.parse_request_line();
+
+    rq.parse_uri();
 }
 
 

@@ -64,7 +64,7 @@ public:
     void close();
     int parse_request_line();
     int parse_request_body();
-    int parse_uri();
+    std::string parse_uri();
 
     //测试func
     void test_make_bufs();
