@@ -33,7 +33,7 @@
 extern std::unordered_map<std::string,std::string> rtk_mime_type;
 
 class rtk_request{
-private:
+public:
     std::string root;
     std::string uri;
     std::string req_file_type;
@@ -56,7 +56,6 @@ private:
 
     std::unordered_map<std::string,std::string> head_list; //存储请求头具体类别
 
-public:
     rtk_request(std::string path);
     ~rtk_request();
 
