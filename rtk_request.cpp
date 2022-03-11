@@ -30,13 +30,12 @@ std::unordered_map<std::string,std::string> rtk_mime_type = {
 };
 
 
-
 rtk_request::rtk_request(std::string path):root(path),fd(0), epoll_fd(0),pos(0),last(0),state(0){
 
 };
 
 rtk_request::~rtk_request() {
-
+    this->RTK_close();
 };
 
 //通过switch-case + enum{流程字段} 来控制可中断读取
@@ -405,7 +404,6 @@ std::string rtk_request::parse_uri() {
     //check path have a point?
     int last_point = filename.find('.');
     //add env root before uri
-    filename = this->root + filename;
 
     //path ending,add slash
     if(last_point == std::string::npos && (filename[filename.length() - 1] != '/')){
@@ -415,13 +413,20 @@ std::string rtk_request::parse_uri() {
     if(filename[filename.length() - 1] == '/'){
         filename += "index.html";
     }
+    //get file_type
+    std::string file_type = filename.substr(filename.rfind('.'),filename.length()-last_point);
+    this->req_file_type = rtk_mime_type[file_type];
 
+    filename = this->root + filename;
     return filename;
 };
 
-void rtk_request::close() {
 
+void rtk_request::RTK_close() {
+    close(this->fd);
+    return;
 };
+
 
 void rtk_request::test_make_bufs() {
     //uri是一个本地的

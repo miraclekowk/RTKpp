@@ -36,6 +36,7 @@ class rtk_request{
 private:
     std::string root;
     std::string uri;
+    std::string req_file_type;
     int method;
     int fd;
     int epoll_fd;
@@ -50,10 +51,8 @@ private:
     void* uri_start;
     void* uri_end;
 
-
     int http_major;
     int http_minor;
-
 
     std::unordered_map<std::string,std::string> head_list; //存储请求头具体类别
 
@@ -61,10 +60,15 @@ public:
     rtk_request(std::string path);
     ~rtk_request();
 
-    void close();
+    //关闭fd，释放请求的内存
+    void RTK_close();
+    //解析请求行
     int parse_request_line();
+    //解析请求体
     int parse_request_body();
+    //解析请求uri,获取请求文件类型
     std::string parse_uri();
+
 
     //测试func
     void test_make_bufs();

@@ -13,6 +13,8 @@
 #include <map>
 #include <algorithm>
 #include <queue>
+//common UNIX-api
+#include <unistd.h>
 
 
 //test control --如果不想走测试，注释掉此行代码
