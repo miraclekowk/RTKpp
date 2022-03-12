@@ -28,7 +28,10 @@ private:
     int rtk_http_connection(rtk_request,std::string);
     int rtk_http_if_modified(rtk_request,std::string);
 
+    //拼接错误响应信息
     void do_error(int fd,char* cause,char* err_num,char* short_msg,char* long_msg);
+    //找不到目标文件的响应
+    int error_file_path(struct stat* sbufptr,std::string filename,int fd);
 
 public:
     rtk_response(int fd);
@@ -38,10 +41,16 @@ public:
     std::string get_shortmsg_from_status_code(int);
     //根据请求类型,设置不同标志位
     void rtk_http_handle_head(rtk_request);
+    //filesize是struct stat中的一个属性,stat是内核获取指定文件的信息结构体
+    void serve_static(rtk_request rq,std::string filename,size_t filesize);
+
+    void do_request(rtk_request rq);
+
 
 
 };
 
+extern std::unordered_map<std::string,std::string> rtk_mime_type;
 
 /*
 //利用handle遍历显然不如map的二叉树结构查询，其次，函数指针指向非静态成员函数时一定要把类实例化

@@ -261,7 +261,7 @@ int rtk_request::parse_request_line() {
         //when you break switch and do not return/goto,you move the buff_pointer
     } //for...
 
-    //没读完，保存状态
+    //读完了，保存状态 下次再来试
     this->pos = pi;
     this->state = cur_state;
     return RTK_AGAIN;   //返回一个EGAIN错误，表示还没读完

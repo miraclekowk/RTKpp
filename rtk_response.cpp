@@ -5,6 +5,9 @@
 #include "rtk_response.h"
 
 
+#define TIMEOUT_DEFAULT 500
+
+
 rtk_response::rtk_response(int fd) {
     this->fd = fd;
     //默认不断开
@@ -88,3 +91,79 @@ void rtk_response::do_error(int fd, char* cause, char* err_num, char* short_msg,
     //rio_writen(fd, body, strlen(body));
     return;
 }
+
+int rtk_response::error_file_path(struct stat* sbufptr,std::string filename,int fd){
+    //stat() return information about a file, in the buffer pointed to by statbuf.
+    if(stat(filename.c_str(),sbufptr) < 0){
+        this->do_error(fd, const_cast<char *>(filename.c_str()), "404", "Not Found", "RTKpp server can not found this file");
+        return 1;
+    }
+
+    //权限问题  S_IRUSR is a mask value
+    if(!(S_ISREG(sbufptr->st_mode)) || !(S_IRUSR & (sbufptr->st_mode) )){
+        this->do_error(fd,const_cast<char *>(filename.c_str()),"403","Fobidden","RTKpp have no authority to read this file.");
+        return 1;
+    }
+
+        return 0;
+}
+
+
+//处理静态文件(主要是读取)
+void rtk_response::serve_static(rtk_request rq, std::string filename, size_t filesize) {
+    char header[MAXLINE];
+    char buff[MAXLINE];
+    struct tm tm;
+
+    //返回响应报文头，包含HTTP版本号状态码及状态码对应的短描述
+    sprintf(header, "HTTP/1.1 %d %s\r\n", this->status, rtk_response::get_shortmsg_from_status_code(this->status).c_str());
+
+    //返回响应头
+    //Connection，Keep-Alive，Content-type，Content-length，Last-Modified
+    if(this->keep_alive){
+        // 返回默认的持续连接模式及超时时间（默认500ms）
+        sprintf(header, "%sConnection: keep-alive\r\n", header);
+        sprintf(header, "%sKeep-Alive: timeout=%d\r\n", header, TIMEOUT_DEFAULT);
+    }
+    //修改过
+    if(this->modified){
+        // 得到文件类型并填充Content-type字段
+        const char* filetype =   rq.req_file_type.c_str();
+        sprintf(header, "%sContent-type: %s\r\n", header, filetype);
+        // 通过Content-length返回文件大小
+        sprintf(header, "%sContent-length: %zu\r\n", header, filesize);
+        // 得到最后修改时间并填充Last-Modified字段
+        localtime_r(&(this->mtime), &tm);
+        strftime(buff, SHORTLINE,  "%a, %d %b %Y %H:%M:%S GMT", &tm);
+        sprintf(header, "%sLast-Modified: %s\r\n", header, buff);
+    }
+    sprintf(header, "%sServer : TKeed\r\n", header);
+
+    //空行（must）
+    sprintf(header, "%s\r\n", header);
+
+    //发送报文头部并校验完整性
+    size_t send_len = (size_t)rtk_io_writen(fd, header, strlen(header));
+    if(send_len != strlen(header)){
+        perror("Send header failed");
+        return;
+    }
+    //发送文件主体
+    int request_file_fd = open(filename.c_str(),O_RDONLY,0);
+    //利用mmap函数完成映射，加快处理速度
+    void* src_addr  = mmap(NULL,filesize,PROT_READ,MAP_PRIVATE,request_file_fd,0);
+    close(request_file_fd);
+
+    send_len = rtk_io_writen(fd,(char*)src_addr,filesize);
+    if(send_len != filesize){
+        perror("Send file failed");
+        return;
+    }
+    munmap(src_addr,filesize);
+}
+
+void rtk_response::do_request(rtk_request rq){
+
+
+};
+

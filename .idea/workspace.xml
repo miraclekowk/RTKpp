@@ -19,19 +19,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="144e81b5-6fef-4e52-b2b1-742384124137" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/rtk_response.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rtk_response.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-439f7485787d47efc298.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2022-03-09T17-05-06-0689.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-RTKpp-Debug-82f5be4e8e7db259784c.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rtk_request.h" beforeDir="false" afterPath="$PROJECT_DIR$/rtk_request.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rtk_request.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rtk_request.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rtk_response.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/rtk_response.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rtk_response.h" beforeDir="false" afterPath="$PROJECT_DIR$/rtk_response.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stdafx.h" beforeDir="false" afterPath="$PROJECT_DIR$/stdafx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,12 +79,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
-  <component name="RunManager" selected="Google Test.TestCase.test3_prase_uri">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="CMake Application.RTKpp">
     <configuration name="TestCase.test1" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RTKpp" TARGET_NAME="RTKpp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RTKpp" RUN_TARGET_NAME="RTKpp" TEST_CLASS="TestCase" TEST_METHOD="test_prase_request_line" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -173,7 +162,8 @@
       <workItem from="1646752229690" duration="24997000" />
       <workItem from="1646849607103" duration="10842000" />
       <workItem from="1646981740518" duration="75000" />
-      <workItem from="1646981836117" duration="14219000" />
+      <workItem from="1646981836117" duration="15109000" />
+      <workItem from="1647068225975" duration="6541000" />
     </task>
     <servers />
   </component>

@@ -3,12 +3,11 @@
 //
 
 #include <stdio.h>
+
+#include <string>
+#include <signal.h>
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <algorithm>
-#include <signal.h>
-#include <stdlib.h>
 
 #include "utils.h"
 
