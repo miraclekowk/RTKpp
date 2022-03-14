@@ -7,6 +7,7 @@
 
 #include "stdafx.h"
 #include "rtk_request.h"
+#include "rtk_io.h"
 
 
 #define MAXLINE 8845

@@ -101,6 +101,13 @@ build CMakeFiles/RTKpp.dir/rtk_response.cpp.o: CXX_COMPILER__RTKpp_Debug /home/n
   OBJECT_DIR = CMakeFiles/RTKpp.dir
   OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
 
+build CMakeFiles/RTKpp.dir/rtk_io.cpp.o: CXX_COMPILER__RTKpp_Debug /home/nins/Code/RTKpp/rtk_io.cpp || cmake_object_order_depends_target_RTKpp
+  DEP_FILE = CMakeFiles/RTKpp.dir/rtk_io.cpp.o.d
+  FLAGS = -g -std=gnu++11
+  INCLUDES = -I/home/nins/Code/RTKpp/src/include -I/home/nins/Code/RTKpp/./googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest/include -isystem /home/nins/Code/RTKpp/googletest/googletest
+  OBJECT_DIR = CMakeFiles/RTKpp.dir
+  OBJECT_FILE_DIR = CMakeFiles/RTKpp.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target RTKpp
@@ -109,7 +116,7 @@ build CMakeFiles/RTKpp.dir/rtk_response.cpp.o: CXX_COMPILER__RTKpp_Debug /home/n
 #############################################
 # Link the executable RTKpp
 
-build RTKpp: CXX_EXECUTABLE_LINKER__RTKpp_Debug CMakeFiles/RTKpp.dir/main.cpp.o CMakeFiles/RTKpp.dir/utils.cpp.o CMakeFiles/RTKpp.dir/rtk_request.cpp.o CMakeFiles/RTKpp.dir/rtk_response.cpp.o | lib/libgtest.a || lib/libgtest.a
+build RTKpp: CXX_EXECUTABLE_LINKER__RTKpp_Debug CMakeFiles/RTKpp.dir/main.cpp.o CMakeFiles/RTKpp.dir/utils.cpp.o CMakeFiles/RTKpp.dir/rtk_request.cpp.o CMakeFiles/RTKpp.dir/rtk_response.cpp.o CMakeFiles/RTKpp.dir/rtk_io.cpp.o | lib/libgtest.a || lib/libgtest.a
   FLAGS = -g
   LINK_LIBRARIES = lib/libgtest.a  -lpthread
   OBJECT_DIR = CMakeFiles/RTKpp.dir

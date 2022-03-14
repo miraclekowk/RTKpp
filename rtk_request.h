@@ -42,8 +42,8 @@ public:
     int epoll_fd;
     char buff[MAX_BUF];
     int state;
-    size_t pos;
-    size_t last;
+    size_t pos; //解析指针位
+    size_t last; //读取指针位
 
     //断点读取buff的指针
     void* request_start;

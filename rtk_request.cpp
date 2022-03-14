@@ -264,9 +264,9 @@ int rtk_request::parse_request_line() {
     //读完了，保存状态 下次再来试
     this->pos = pi;
     this->state = cur_state;
-    return RTK_AGAIN;   //返回一个EGAIN错误，表示还没读完
+    return RTK_AGAIN;   //返回一个EGAIN错误，数据读完了
 
-    //这部分是否有必要还需要考虑
+
     done:
     this->pos = pi + 1;
     if(NULL == this->request_end){
@@ -371,6 +371,7 @@ int rtk_request::parse_request_body() {
                     cur_state = sw_crlfcr;
                 }else{
                     cur_key.clear();
+                    cur_value.clear();
                     cur_key.push_back(ch); //开始记录新key
                     cur_state = sw_key;
                 }
