@@ -4,7 +4,7 @@ project(RTKpp)
 set(CMAKE_CXX_STANDARD 11)
 
 
-add_executable(RTKpp main.cpp utils.cpp utils.h rtk_request.cpp rtk_request.h stdafx.h rtk_response.cpp rtk_response.h rtk_io.cpp rtk_io.h)
+add_executable(RTKpp main.cpp utils.cpp utils.h rtk_request.cpp rtk_request.h stdafx.h rtk_response.cpp rtk_response.h rtk_io.cpp rtk_io.h rtk_threadpool.cpp rtk_threadpool.h)
 add_subdirectory(./googletest)
 include_directories(${PROJECT_SOURCE_DIR}/src/include ./googletest/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/googletest)

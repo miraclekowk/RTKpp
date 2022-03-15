@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <queue>
 #include <cmath>
+#include <vector>
 
 
 //common UNIX-api
