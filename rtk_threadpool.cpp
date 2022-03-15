@@ -40,41 +40,48 @@ void rtk_threadpool::addTask(const task &f) {
 
 //线程池结束全部工作
 void rtk_threadpool::finish() {
+    {
+        std::unique_lock<std::mutex> lk(_mutex);
+        done = true;
+    }
+
     for(int i = 0;i < this->threads.size();i++){
         threads[i].join();
     }
+    threads.clear();
 }
 
 void rtk_threadpool::runTask() {
     while(!done){
-        //加锁互斥锁
-        std::unique_lock<std::mutex> lk(_mutex);
-
-        //任务空
-        ///尝试拿锁，拿到了说明轮到本线程执行了
-        while(this->isEmpty){
-            cond.wait(lk);
-        }
-
         //任务队列出列
         task ta;
-        ///move() 左值引用强行变成右值引用
-        ta = std::move(task_queue.front());
-        task_queue.pop();
+        {
+            //加锁互斥锁
+            std::unique_lock<std::mutex> lk(_mutex);
 
-        if(task_queue.empty()){
-            this->isEmpty = true;
+            //任务空
+            ///尝试拿锁，拿到了说明轮到本线程执行了
+            while (this->isEmpty) {
+                cond.wait(lk);
+            }
+
+            //任务出列
+            ///move() 左值引用强行变成右值引用
+            ta = std::move(task_queue.front());
+            task_queue.pop();
+            if (task_queue.empty()) {
+                this->isEmpty = true;
+            }
+            isFull = false;
         }
-        isFull = false;
-
         //执行任务
         //ta.func(ta.arg); //原先使用函数指针，不太对，这里学习c++写法 typedef function<返回值>
         ta();   //利用bind(funcName,args)来带参数执行
+
         cond.notify_one();
     }
 }
 
-//
 void rtk_threadpool::start(int num) {
     rtk_threadpool::setSize(num);
 
@@ -85,7 +92,7 @@ void rtk_threadpool::start(int num) {
 }
 
 rtk_threadpool::~rtk_threadpool() {
-
+    finish();
 }
 
 void test_tp(int a){
@@ -97,10 +104,10 @@ TEST(TestCase,test5_threadpool_func){
     tp.start(4);
     int a = 0;
 
-    while(1){
+    while(a<100){
         a++;
-        //调整cpu调度
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //调整cpu调度间隔
+        std::this_thread::sleep_for(std::chrono::milliseconds (200));
         auto task = std::bind(test_tp, a);
         tp.addTask(task);
     }
