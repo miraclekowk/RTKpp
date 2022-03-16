@@ -66,7 +66,7 @@ void rtk_threadpool::runTask() {
             }
 
             //任务出列
-            ///move() 左值引用强行变成右值引用
+            ///move() 左值引用强行变成右值引用,避免深拷贝
             ta = std::move(task_queue.front());
             task_queue.pop();
             if (task_queue.empty()) {
@@ -94,10 +94,13 @@ void rtk_threadpool::start(int num) {
 rtk_threadpool::~rtk_threadpool() {
     finish();
 }
+class test1_tp{
+public:
+    static void test_tp(int a){
+        std::cout<<"now is thread:"<<std::this_thread::get_id()<<"， task finish"<<a<<std::endl;
+    }
+};
 
-void test_tp(int a){
-    std::cout<<"now is thread:"<<std::this_thread::get_id()<<"， task finish"<<a<<std::endl;
-}
 
 TEST(TestCase,test5_threadpool_func){
     rtk_threadpool tp;
@@ -108,7 +111,7 @@ TEST(TestCase,test5_threadpool_func){
         a++;
         //调整cpu调度间隔
         std::this_thread::sleep_for(std::chrono::milliseconds (200));
-        auto task = std::bind(test_tp, a);
+        auto task = std::bind(test1_tp::test_tp, a);
         tp.addTask(task);
     }
 

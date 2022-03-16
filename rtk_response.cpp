@@ -162,72 +162,6 @@ void rtk_response::serve_static(rtk_request rq, std::string filename, size_t fil
     munmap(src_addr,filesize);
 }
 
-void rtk_response::do_request(rtk_request rq){
-    //用户态缓冲区 request->buf的指针
-    char* plast;
-    size_t remain_size;
-    int n_read; //实际读取数量
-    int parse_return; //解析函数返回的结果
-    std::string filename;  //请求资源的绝对路径
-    struct stat sbuf;  //用来存放文件stat信息的结构体
-
-    while(1){
-        // plast指向缓冲区buf当前可写入的第一个字节位置，取余是为了实现循环缓冲
-        plast = &rq.buff[rq.last % MAX_BUF];
-
-        // remain_size表示缓冲区当前剩余可写入字节数
-        remain_size = std::min(MAX_BUF - (rq.last - rq.pos) - 1, MAX_BUF - rq.last % MAX_BUF);
-
-        n_read = read(fd,plast,remain_size);
-        //读到文件结束符或没有可读数据  断开tcp连接
-        if(n_read == 0){
-            goto err;
-        }else if(n_read < 0 && (errno != RTK_AGAIN)){
-            goto err;
-        }else if(n_read < 0 && (errno == RTK_AGAIN)){
-            break;//若read返回一个EAGAIN，则说明当前包读完，但是没见到EOF,重新去epoll中注册(即保持了连接)等待新连接包到达
-        }
-
-        rq.last += n_read; //读到n个字符，移动buf内读到的指针
-
-
-        parse_return = rq.parse_request_line();
-        if(parse_return == RTK_AGAIN){
-            continue; //读到EAGAIN,说明buf中有的都解析完了，但line还没结尾，while继续去fd里面拉取
-        }else if(parse_return != 0){
-            goto err;  //return 0时，是正常解析到结尾，不为0则异常
-        }
-
-        parse_return = rq.parse_request_body();
-        if(parse_return == RTK_AGAIN){
-            continue;  ///这里continue其实会有点问题，但因为buf足够大不会有分段解析的问题
-        }else if(parse_return != 0){
-            goto err;
-        }
-
-        filename = rq.parse_uri();
-        ///这里不理解为啥要继续尝试? 因此改成直接出去断连
-        if(this->error_file_path(&sbuf,filename,this->fd)){
-            //continue;  //找不到文件，可能是fiename文件解析问题，继续尝试
-            goto err;
-        }
-        //形成正常响应头
-        this->rtk_http_handle_head(rq);
-
-        this->serve_static(rq,filename,sbuf.st_size);
-
-        if(!this->keep_alive)
-            goto close;
-    }
-    //一次请求响应结束后不立即断开连接，对应一个文件需要多个http包的场景，等待后续请求包
-    //rtk_epoll_mod();
-    //rtk_add_timer();
-    return;
-
-    err:
-    close:
-    rq.RTK_close();
-};
 
 TEST(TestCase,test4_do_request){
     rtk_request rq("../");
@@ -255,7 +189,7 @@ TEST(TestCase,test4_do_request){
     //int len = read(rq.fd,rbuf,maxbuf);
 
     rtk_response rsp(rq.fd);
-    rsp.do_request(rq);
+    //rsp.do_request(rq,_);
 
     EXPECT_EQ(maxbuf,rq.last);
 }

@@ -10,19 +10,21 @@
 #include "rtk_io.h"
 
 
+
 #define MAXLINE 8845
 #define SHORTLINE 512
 
 
 
 class rtk_response{
-private:
+public:
     int fd;
     int keep_alive;
     time_t mtime;
     int modified;
     int status;
 
+public:
     //响应控制函数
     //headers形如  Connection:keep-alive
     int rtk_http_ignore();
@@ -45,7 +47,7 @@ public:
     //filesize是struct stat中的一个属性,stat是内核获取指定文件的信息结构体
     void serve_static(rtk_request rq,std::string filename,size_t filesize);
 
-    void do_request(rtk_request rq);
+    //void do_request(rtk_request rq);
 
 
 

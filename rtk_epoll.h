@@ -10,18 +10,24 @@
 
 #include "stdafx.h"
 #include "rtk_request.h"
+#include "rtk_response.h"
 #include "rtk_threadpool.h"
 
+extern struct epoll_event* events_list;
 
 class rtk_epoll{
 public:
+
+    void do_request(rtk_request rq,rtk_response rsp);
+
+
     //处理epoll队列
     int rtk_epoll_create(int flag);
     int rtk_epoll_add(int epoll_fd,int fd,rtk_request rq,int events);
     int rtk_epoll_mod(int epoll_fd,int fd,rtk_request rq,int events);
-    int rtk_epoll_wait(int epoll_fd,int fd,rtk_request rq,int events);
+    int rtk_epoll_wait(int epoll_fd,struct epoll_event* events_list,int max_events,int timeout);
 
-    void distribute_events(int epoll_fd,int listen_fd,struct epoll_event* events,int events_num,std::string path,rtk_threadpool tp);
+    void distribute_events(int epoll_fd,int listen_fd,struct epoll_event* events,int events_num,std::string path,rtk_response rsp,rtk_threadpool tp);
 
 
 };
