@@ -58,8 +58,7 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path){
     rtk_epoll_add(epoll_fd,accpet_fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
 
     //刷新时间
-    //rtk_add_timer()
-
+    rtk_add_timer();
 };
 
 
@@ -108,7 +107,7 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
 
         filename = rq->parse_uri();
         ///这里不理解为啥要继续尝试? 因此改成直接出去断连
-        if(rsp->error_file_path(&sbuf,filename,rsp.fd)){
+        if(rsp->error_file_path(&sbuf,filename,rsp->fd)){
             //continue;  //找不到文件，可能是fiename文件解析问题，继续尝试
             goto err;
         }
@@ -122,12 +121,12 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
     }
     //一次请求响应结束后不立即断开连接，对应一个文件需要多个http包的场景，等待后续请求包
     rtk_epoll_mod(rq->epoll_fd,rq->fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
-    //rtk_add_timer();
+    rtk_add_timer();
     return;
 
     err:
     close:
-    rq.RTK_close();
+    rq->RTK_close();
 };
 
 void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_event *events_list, int events_num, std::string path,rtk_response* rsp,rtk_threadpool tp) {
@@ -149,8 +148,10 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_even
 
 //            void(rtk_response:: *func)(rtk_request);
 //            func = &rtk_response::do_request;
-            function<void()> tsk = std::bind(&rtk_epoll::do_request, this, rq, rsp);  ///大概bind把epoll类的this绑进去了？ 如果改动response那边会交叉引用
+            ///store the result of a call to std::bind -- bind do_request and it's parameter
+            auto tsk = std::bind(&rtk_epoll::do_request, this, rq, rsp);  ///为啥this一定要传入
             tp.addTask(tsk);
         }
     }
 }
+

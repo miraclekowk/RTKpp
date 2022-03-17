@@ -101,6 +101,7 @@ public:
     }
 };
 
+#ifdef DEBUG_MODE
 
 TEST(TestCase,test5_threadpool_func){
     rtk_threadpool tp;
@@ -119,3 +120,5 @@ TEST(TestCase,test5_threadpool_func){
 
     tp.finish();
 }
+
+#endif

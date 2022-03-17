@@ -5,6 +5,16 @@
 #ifndef RTKPP_UTILS_H
 #define RTKPP_UTILS_H
 
+#include <stdio.h>
+
+#include <string>
+#include <signal.h>
+#include <iostream>
+#include <fstream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 //引入公有头
 #include "stdafx.h"
 
@@ -12,6 +22,7 @@
 
 #define DELIM "="
 #define BUFLEN 6657   //读取配置文件缓冲区的大小
+#define LISTENQ 1024
 
 #define RTK_CONF_OK 0
 #define RTK_CONF_ERROR -1

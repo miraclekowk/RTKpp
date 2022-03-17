@@ -2,12 +2,7 @@
 // Created by nins on 2022/3/7.
 //
 
-#include <stdio.h>
 
-#include <string>
-#include <signal.h>
-#include <iostream>
-#include <fstream>
 
 #include "utils.h"
 
@@ -88,4 +83,37 @@ int make_socket_no_blocking(int fd){
 };
 
 
+int socket_bind_and_listen(int port){
 
+    port = ((port <= 1024) || (port >= 65535) ) ? 6777:port;
+
+    //AF_INET: protocol families  IPv4 Internet protocols
+    //SOCK_STREAM: Provides sequenced, reliable, two-way, connection-based byte streams. An out-of-band data transmission mechanism may be supported.
+    int listen_fd = socket(AF_INET,SOCK_STREAM,0);
+    if(listen_fd == -1)
+        return -1;
+
+    //消除bind时address already in used
+    int optval = 1;
+    if(setsockopt(listen_fd,SOL_SOCKET,SO_REUSEADDR,(const void*)&optval,sizeof(int)) == -1)
+        return -1;
+
+    struct sockaddr_in server_addr;
+    memset(&server_addr,0, sizeof(struct sockaddr_in));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_addr.sin_port = htons((unsigned short)port);
+    if(bind(listen_fd,(struct sockaddr*)&server_addr, sizeof(server_addr)) == -1)
+        return -1;
+
+    //开始监听
+    if(listen(listen_fd,LISTENQ) == -1)
+        return -1;
+
+    if(listen_fd == -1){
+        close(listen_fd);
+        return -1;
+    }
+
+    return listen_fd;
+}

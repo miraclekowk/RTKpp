@@ -162,6 +162,7 @@ void rtk_response::serve_static(rtk_request rq, std::string filename, size_t fil
     munmap(src_addr,filesize);
 }
 
+#ifdef DEBUG_MODE
 
 TEST(TestCase,test4_do_request){
     rtk_request rq("../");
@@ -193,3 +194,5 @@ TEST(TestCase,test4_do_request){
 
     EXPECT_EQ(maxbuf,rq.last);
 }
+
+#endif
