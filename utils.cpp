@@ -76,3 +76,16 @@ void handle_for_sigpipe(){
         return;
 }
 
+int make_socket_no_blocking(int fd){
+    //F_GETFL  获取文件状态标志
+    int flag = fcntl(fd,F_GETFL,0);
+    if (flag == -1)
+        return -1;
+    //固定写法
+    flag |= O_NONBLOCK;
+    if(fcntl(fd,F_SETFL,flag) == -1)
+        return -1;
+};
+
+
+

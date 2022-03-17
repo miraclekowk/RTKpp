@@ -12,6 +12,9 @@
 #include <condition_variable>
 #include <functional>
 
+#include "rtk_response.h"
+#include "rtk_request.h"
+
 
 //struct task{
 //    void* arg;
@@ -21,7 +24,7 @@
 
 class rtk_threadpool{
 public:
-    ///c++11新特性写法
+    ///c++11新特性
     typedef std::function<void()> task;
 
     rtk_threadpool();

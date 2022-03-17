@@ -96,8 +96,8 @@ rtk_threadpool::~rtk_threadpool() {
 }
 class test1_tp{
 public:
-    static void test_tp(int a){
-        std::cout<<"now is thread:"<<std::this_thread::get_id()<<"， task finish"<<a<<std::endl;
+    static void test_tp(int a,int b){
+        std::cout<<"now is thread:"<<std::this_thread::get_id()<<"， task finish"<<a+b<<std::endl;
     }
 };
 
@@ -106,13 +106,15 @@ TEST(TestCase,test5_threadpool_func){
     rtk_threadpool tp;
     tp.start(4);
     int a = 0;
+    int b = 6657;
 
     while(a<100){
         a++;
         //调整cpu调度间隔
         std::this_thread::sleep_for(std::chrono::milliseconds (200));
-        auto task = std::bind(test1_tp::test_tp, a);
-        tp.addTask(task);
+        //这里 ts是自动根据bind推断的  推断结果是bind<void(int,int)>
+        auto ts = std::bind(test1_tp::test_tp, a,b);
+        tp.addTask(ts);
     }
 
     tp.finish();
