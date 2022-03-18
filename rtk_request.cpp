@@ -425,6 +425,7 @@ std::string rtk_request::parse_uri() {
 
 void rtk_request::RTK_close() {
     close(this->fd);
+    free(this);
     return;
 };
 

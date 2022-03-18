@@ -25,7 +25,7 @@
 
 
 //test control --如果不想走测试，注释掉此行代码
-#define DEBUG_MODE
+//#define DEBUG_MODE
 
 
 #ifdef DEBUG_MODE

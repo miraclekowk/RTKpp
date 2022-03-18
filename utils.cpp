@@ -82,7 +82,7 @@ int make_socket_no_blocking(int fd){
         return -1;
 };
 
-
+//socket()创建listen_fd并开始监听
 int socket_bind_and_listen(int port){
 
     port = ((port <= 1024) || (port >= 65535) ) ? 6777:port;
@@ -99,7 +99,8 @@ int socket_bind_and_listen(int port){
         return -1;
 
     struct sockaddr_in server_addr;
-    memset(&server_addr,0, sizeof(struct sockaddr_in));
+    //memset(&server_addr,0, sizeof(struct sockaddr_in));
+    server_addr = {0};    //初始化
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons((unsigned short)port);

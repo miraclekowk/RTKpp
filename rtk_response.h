@@ -5,9 +5,14 @@
 #ifndef RTKPP_RTK_RESPONSE_H
 #define RTKPP_RTK_RESPONSE_H
 
+#include <cstring>
+#include <sys/stat.h>
+
 #include "stdafx.h"
 #include "rtk_request.h"
 #include "rtk_io.h"
+
+
 
 
 
@@ -17,6 +22,10 @@
 
 
 class rtk_response{
+public:
+    rtk_response(int fd);
+    ~rtk_response();
+
 public:
     int fd;
     int keep_alive;
@@ -36,9 +45,7 @@ public:
     //找不到目标文件的响应
     int error_file_path(struct stat* sbufptr,std::string filename,int fd);
 
-public:
-    rtk_response(int fd);
-    ~rtk_response();
+
 
     //根据状态码返回短句
     std::string get_shortmsg_from_status_code(int);

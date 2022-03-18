@@ -148,6 +148,7 @@ void rtk_response::serve_static(rtk_request rq, std::string filename, size_t fil
         perror("Send header failed");
         return;
     }
+
     //发送文件主体
     int request_file_fd = open(filename.c_str(),O_RDONLY,0);
     //利用mmap函数完成映射，加快处理速度

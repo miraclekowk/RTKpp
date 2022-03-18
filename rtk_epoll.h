@@ -15,14 +15,17 @@
 #include "rtk_response.h"
 #include "rtk_threadpool.h"
 #include "utils.h"
+#include "rtk_timer.h"
+
+#define MAXEVENTS 1024
 
 extern struct epoll_event* events_list;
 
 class rtk_epoll{
 public:
 
-    void accept_connection(int linsten_fd,int epoll_fd,std::string path);
-    void do_request(rtk_request* rq,rtk_response* rsp);
+    void accept_connection(int linsten_fd,int epoll_fd,std::string path,rtk_timer* timer);
+    void do_request(rtk_request* rq,rtk_timer* timer);
 
 
     //处理epoll队列
@@ -31,7 +34,8 @@ public:
     int rtk_epoll_mod(int epoll_fd,int fd,rtk_request* rq,int events);
     int rtk_epoll_wait(int epoll_fd,struct epoll_event* events_list,int max_events,int timeout);
 
-    void distribute_events(int epoll_fd,int listen_fd,struct epoll_event* events,int events_num,std::string path,rtk_response* rsp,rtk_threadpool tp);
+    void distribute_events(int epoll_fd,int listen_fd,struct epoll_event* events,int events_num,std::string path
+           ,rtk_threadpool* tp,rtk_timer* timer);
 
 
 };

@@ -40,7 +40,9 @@ void rtk_timer::rtk_add_timer(rtk_request *rq, size_t timeout, time_handle_func 
     rtk_timer_update();
 
     time_node tm;
-    ///request->timer = tm;   需要优化 产生循环Include
+    ///request->timer = tm;
+    request_to_timer[rq] = &tm;
+
     tm.timeout_val = rtk_current_timer + timeout;
     tm.delected = false;
     tm.handler = handler;
@@ -49,14 +51,36 @@ void rtk_timer::rtk_add_timer(rtk_request *rq, size_t timeout, time_handle_func 
     time_queue.push(&tm);
 }
 
-void rtk_timer::rtk_del_timer(rtk_request *rq, size_t timeout, time_handle_func handler) {
+void rtk_timer::rtk_del_timer(rtk_request *rq) {
     rtk_timer_update();
-    ///...
+    ///降速太严重..？ 待测
+//    if(request_to_timer.find(rq) == request_to_timer.end())
+//        return -1;
 
+    time_node* tm_ptr = request_to_timer[rq];
+    tm_ptr->delected = true;
 }
 
 void rtk_timer::rtk_handle_expire_time() {
+    while(!time_queue.empty()){
+        rtk_timer_update();
+        time_node* tm_ptr = time_queue.top(); //取得最早的时间
+        //如果此节点已经删除
+        if(tm_ptr->delected){
+            time_queue.pop();
+            free(tm_ptr);
+        }
 
+        //最早的时间都还没到，结束超时检查
+        if(tm_ptr->timeout_val > rtk_current_timer){
+            return;
+        }
+        //没删除且超时了，调用handle指定的函数来执行处理
+        if(tm_ptr->handler){
+            tm_ptr->handler();
+        }
 
-
+        time_queue.pop();
+        free(tm_ptr);
+    }
 }

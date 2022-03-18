@@ -36,11 +36,9 @@ struct RTK_config{
 };
 
 
-
-
 int read_conf(string filename, RTK_config cfg);
 void handle_for_sigpipe();
-int listen_socket_bind();
+int socket_bind_and_listen(int port);
 int make_socket_no_blocking(int fd);
 
 void accept_connection(int listen_fd,int epoll_fd,string fd);

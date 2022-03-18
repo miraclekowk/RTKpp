@@ -41,7 +41,7 @@ int rtk_epoll::rtk_epoll_wait(int epoll_fd, struct epoll_event *events_list, int
     return active_events;
 }
 
-void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path){
+void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,rtk_timer* timer){
     struct sockaddr_in client_addr;
     memset(&client_addr,0, sizeof(struct sockaddr_in));
     socklen_t client_addr_len = 0;
@@ -57,12 +57,12 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path){
     //增加epoll活跃监听
     rtk_epoll_add(epoll_fd,accpet_fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
 
-    //刷新时间
-    rtk_add_timer();
+    //刷新时间  如果超时则直接调用request.close()
+    timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,rq));
 };
 
 
-void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
+void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
     //用户态缓冲区 request->buf的指针
     char* plast;
     size_t remain_size;
@@ -70,6 +70,8 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
     int parse_return; //解析函数返回的结果
     std::string filename;  //请求资源的绝对路径
     struct stat sbuf;  //用来存放文件stat信息的结构体
+
+    timer->rtk_del_timer(rq);
 
     while(1){
         // plast指向缓冲区buf当前可写入的第一个字节位置，取余是为了实现循环缓冲
@@ -106,8 +108,10 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
         }
 
         filename = rq->parse_uri();
+
+        rtk_response* rsp;  //开始根据request生成一个response
         ///这里不理解为啥要继续尝试? 因此改成直接出去断连
-        if(rsp->error_file_path(&sbuf,filename,rsp->fd)){
+        if(rsp->error_file_path(&sbuf,filename,rq->fd)){
             //continue;  //找不到文件，可能是fiename文件解析问题，继续尝试
             goto err;
         }
@@ -121,7 +125,7 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
     }
     //一次请求响应结束后不立即断开连接，对应一个文件需要多个http包的场景，等待后续请求包
     rtk_epoll_mod(rq->epoll_fd,rq->fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
-    rtk_add_timer();
+    timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,rq));
     return;
 
     err:
@@ -129,13 +133,14 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_response* rsp){
     rq->RTK_close();
 };
 
-void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_event *events_list, int events_num, std::string path,rtk_response* rsp,rtk_threadpool tp) {
+void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_event *events_list, int events_num,
+        std::string path,rtk_threadpool* tp,rtk_timer* timer) {
     for(int i = 0;i < events_num;i++){
         rtk_request* rq = static_cast<rtk_request *>(events_list[i].data.ptr);
         int fd = events_list[i].data.fd;
 
         if(fd == listen_fd){
-            accept_connection(listen_fd,epoll_fd,path);
+            accept_connection(listen_fd,epoll_fd,path,timer);
         }else{
             //error is like 0x008,use &,if the result is 1,indicate events is belong to this type of error
             //EPOLLHUP -- 文件被挂断
@@ -149,8 +154,8 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_even
 //            void(rtk_response:: *func)(rtk_request);
 //            func = &rtk_response::do_request;
             ///store the result of a call to std::bind -- bind do_request and it's parameter
-            auto tsk = std::bind(&rtk_epoll::do_request, this, rq, rsp);  ///第一个参数是方法地址，第二个参数是拥有这个方法的实例
-            tp.addTask(tsk);
+            auto tsk = std::bind(&rtk_epoll::do_request, this, rq,timer);  ///第一个参数是方法地址，第二个参数是拥有这个方法的实例
+            tp->addTask(tsk);
         }
     }
 }
