@@ -149,7 +149,7 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_even
 //            void(rtk_response:: *func)(rtk_request);
 //            func = &rtk_response::do_request;
             ///store the result of a call to std::bind -- bind do_request and it's parameter
-            auto tsk = std::bind(&rtk_epoll::do_request, this, rq, rsp);  ///为啥this一定要传入
+            auto tsk = std::bind(&rtk_epoll::do_request, this, rq, rsp);  ///第一个参数是方法地址，第二个参数是拥有这个方法的实例
             tp.addTask(tsk);
         }
     }
