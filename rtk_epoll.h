@@ -19,9 +19,12 @@
 
 #define MAXEVENTS 1024
 
-extern struct epoll_event* events_list;
+//extern struct epoll_event* events_list;
 
 class rtk_epoll{
+public:
+    struct epoll_event events_list[MAXEVENTS];
+
 public:
 
     void accept_connection(int linsten_fd,int epoll_fd,std::string path,rtk_timer* timer);
@@ -32,9 +35,9 @@ public:
     int rtk_epoll_create(int flag);
     int rtk_epoll_add(int epoll_fd,int fd,rtk_request* rq,int events);
     int rtk_epoll_mod(int epoll_fd,int fd,rtk_request* rq,int events);
-    int rtk_epoll_wait(int epoll_fd,struct epoll_event* events_list,int max_events,int timeout);
+    int rtk_epoll_wait(int epoll_fd,int max_events,int timeout);
 
-    void distribute_events(int epoll_fd,int listen_fd,struct epoll_event* events,int events_num,std::string path
+    void distribute_events(int epoll_fd,int listen_fd,int events_num,std::string path
            ,rtk_threadpool* tp,rtk_timer* timer);
 
 

@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -36,7 +37,7 @@ struct RTK_config{
 };
 
 
-int read_conf(string filename, RTK_config cfg);
+int read_conf(string filename, RTK_config* cfg);
 void handle_for_sigpipe();
 int socket_bind_and_listen(int port);
 int make_socket_no_blocking(int fd);

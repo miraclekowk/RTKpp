@@ -40,13 +40,14 @@ void rtk_timer::rtk_add_timer(rtk_request *rq, size_t timeout, time_handle_func 
     rtk_timer_update();
 
     time_node tm;
-    ///request->timer = tm;
-    request_to_timer[rq] = &tm;
 
     tm.timeout_val = rtk_current_timer + timeout;
     tm.delected = false;
     tm.handler = handler;
     tm.request = rq;
+
+    ///request->timer = tm;
+    request_to_timer[rq] = &tm;
 
     time_queue.push(&tm);
 }

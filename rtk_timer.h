@@ -24,6 +24,10 @@ public:
         bool delected;
         time_handle_func handler;
         rtk_request* request;
+
+        bool operator<(const time_node *a) const{
+            return this->timeout_val > a->timeout_val;  //小顶堆
+        };
     };
 
 

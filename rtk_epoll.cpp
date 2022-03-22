@@ -4,7 +4,7 @@
 
 #include "rtk_epoll.h"
 
-struct epoll_event* events_list;
+//struct epoll_event* events_list;
 
 int rtk_epoll::rtk_epoll_create(int flag) {
     //flag是0时可以关闭fork之后子进程无用的fd
@@ -12,16 +12,17 @@ int rtk_epoll::rtk_epoll_create(int flag) {
     if(epoll_fd == -1)
         return -1;
 
-    events_list = new epoll_event; //为感兴趣事件申请空间
+    //events_list = (struct epoll_event*) malloc(sizeof(struct epoll_event) * MAXEVENTS); //为感兴趣事件申请空间
     return epoll_fd;
 };
 
 int rtk_epoll::rtk_epoll_add(int epoll_fd, int fd, rtk_request* rq, int events) {
     struct epoll_event ev;
-    ev.data.ptr = rq;
+    ev.data.ptr = (void*)rq;
+    ev.data.fd = fd;
     ev.events = events;
     int res = epoll_ctl(epoll_fd,EPOLL_CTL_ADD,fd,&ev);
-    if(res = -1)
+    if(res == -1)
         return -1;
     return 0;
 }
@@ -36,7 +37,7 @@ int rtk_epoll::rtk_epoll_mod(int epoll_fd, int fd, rtk_request* rq, int events) 
     return 0;
 }
 
-int rtk_epoll::rtk_epoll_wait(int epoll_fd, struct epoll_event *events_list, int max_events, int timeout) {
+int rtk_epoll::rtk_epoll_wait(int epoll_fd, int max_events, int timeout) {
     int active_events =  epoll_wait(epoll_fd,events_list,max_events,timeout);
     return active_events;
 }
@@ -57,7 +58,7 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,r
     //增加epoll活跃监听
     rtk_epoll_add(epoll_fd,accpet_fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
 
-    //刷新时间  如果超时则直接调用request.close()
+    //刷新时间，往时间queue里加入节点  如果超时则届时调用request.close()
     timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,rq));
 };
 
@@ -133,10 +134,11 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
     rq->RTK_close();
 };
 
-void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_event *events_list, int events_num,
+void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, int events_num,
         std::string path,rtk_threadpool* tp,rtk_timer* timer) {
     for(int i = 0;i < events_num;i++){
-        rtk_request* rq = static_cast<rtk_request *>(events_list[i].data.ptr);
+
+        rtk_request* rq = (rtk_request *)(events_list[i].data.ptr);  ///第一次建立连接是0 is ok
         int fd = events_list[i].data.fd;
 
         if(fd == listen_fd){
@@ -151,8 +153,6 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, struct epoll_even
                 continue;  //处理异常事件，处理方法就是关闭fd且跳过
             }
 
-//            void(rtk_response:: *func)(rtk_request);
-//            func = &rtk_response::do_request;
             ///store the result of a call to std::bind -- bind do_request and it's parameter
             auto tsk = std::bind(&rtk_epoll::do_request, this, rq,timer);  ///第一个参数是方法地址，第二个参数是拥有这个方法的实例
             tp->addTask(tsk);

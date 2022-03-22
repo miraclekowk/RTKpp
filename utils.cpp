@@ -19,7 +19,7 @@ bool str_valid_isdigit(string str){
     return true;
 }
 
-int read_conf(string filename, RTK_config cfg){
+int read_conf(string filename, RTK_config* cfg){
 
     fstream infile;
     infile.open(filename,ios::in); //只读打开
@@ -39,21 +39,21 @@ int read_conf(string filename, RTK_config cfg){
 
         //c++的string是类，所以可以直接用==来比较  char*是指针，==在比较两指针是否相等
         if(key == "root"){
-            cfg.root = value;
+            cfg->root = value;
         }
 
         if(key == "port"){
             if(!str_valid_isdigit(value)){
                 return RTK_CONF_ERROR;
             }
-            cfg.port = stoi(value);
+            cfg->port = stoi(value);
         }
 
         if(key == "thread_num"){
             if(!str_valid_isdigit(value)){
                 return RTK_CONF_ERROR;
             }
-            cfg.port = stoi(value);
+            cfg->thread_num = stoi(value);
         }
     }
 
@@ -65,9 +65,13 @@ int read_conf(string filename, RTK_config cfg){
 void handle_for_sigpipe(){
     //struct sigaction* sa = (struct sigaction*) malloc(sizeof(struct sigaction));
     struct sigaction sa;
+    sa = {0};
     sa.sa_handler = SIG_IGN;
     sa.sa_flags = 0;
-    if(sigaction(SIGPIPE,&sa,NULL))
+    if(sigaction(SIGPIPE,&sa,NULL) == 0){
+        std::cout<<"SIGPIPE ignore";
+        return;
+    }
         return;
 }
 
@@ -80,6 +84,8 @@ int make_socket_no_blocking(int fd){
     flag |= O_NONBLOCK;
     if(fcntl(fd,F_SETFL,flag) == -1)
         return -1;
+    //if success
+    return 0;
 };
 
 //socket()创建listen_fd并开始监听
@@ -108,12 +114,10 @@ int socket_bind_and_listen(int port){
         return -1;
 
     //开始监听
-    if(listen(listen_fd,LISTENQ) == -1)
-        return -1;
-
-    if(listen_fd == -1){
+    if(listen(listen_fd,LISTENQ) == -1){
         close(listen_fd);
         return -1;
+
     }
 
     return listen_fd;
