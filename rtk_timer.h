@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <functional>
+#include <mutex>
 
 #include "stdafx.h"
 #include "rtk_request.h"
@@ -37,9 +38,11 @@ public:
     ~rtk_timer();
 public:
 
-
     std::priority_queue<time_node*> time_queue;
     size_t rtk_current_timer;  //当前时间
+
+    std::mutex q_mutex; //protect queue
+
 
 public:
     int rtk_find_timer();

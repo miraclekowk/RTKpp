@@ -16,6 +16,7 @@ rtk_timer::rtk_timer() {
 }
 
 int rtk_timer::rtk_find_timer() {
+    std::unique_lock<std::mutex> lock(q_mutex);
     int time;
     //循环删除可能已经删除掉的时间节点
     while(!time_queue.empty()){
@@ -37,6 +38,7 @@ int rtk_timer::rtk_find_timer() {
 }
 
 void rtk_timer::rtk_add_timer(rtk_request *rq, size_t timeout, time_handle_func handler) {
+    std::unique_lock<std::mutex> lock(q_mutex);
     rtk_timer_update();
 
     time_node tm;
@@ -50,9 +52,11 @@ void rtk_timer::rtk_add_timer(rtk_request *rq, size_t timeout, time_handle_func 
     request_to_timer[rq] = &tm;
 
     time_queue.push(&tm);
+
 }
 
 void rtk_timer::rtk_del_timer(rtk_request *rq) {
+    std::unique_lock<std::mutex> lock(q_mutex);
     rtk_timer_update();
     ///降速太严重..？ 待测
 //    if(request_to_timer.find(rq) == request_to_timer.end())

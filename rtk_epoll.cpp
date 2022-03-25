@@ -43,6 +43,7 @@ int rtk_epoll::rtk_epoll_wait(int epoll_fd, int max_events, int timeout) {
 }
 
 void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,rtk_timer* timer){
+
     struct sockaddr_in client_addr;
     memset(&client_addr,0, sizeof(struct sockaddr_in));
     socklen_t client_addr_len = 0;
@@ -58,8 +59,11 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,r
     //增加epoll活跃监听
     rtk_epoll_add(epoll_fd,accpet_fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
 
-    //刷新时间，往时间queue里加入节点  如果超时则届时调用request.close()
-    timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,rq));
+    {
+        std::unique_lock<std::mutex> lock1(add_mutex);
+        //刷新时间，往时间queue里加入节点  如果超时则届时调用request.close()
+        timer->rtk_add_timer(rq, TIMEOUT_DEFAULT, std::bind(&rtk_request::RTK_close, rq));
+    }
 };
 
 
@@ -142,7 +146,11 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, int events_num,
         int fd = events_list[i].data.fd;
 
         if(fd == listen_fd){
+
             accept_connection(listen_fd,epoll_fd,path,timer);
+
+            //auto accpet_tsk = std::bind(&rtk_epoll::accept_connection,this,listen_fd,epoll_fd,path,timer);
+            //tp->addTask(accpet_tsk);  //报错Segmentation Fault
         }else{
             //error is like 0x008,use &,if the result is 1,indicate events is belong to this type of error
             //EPOLLHUP -- 文件被挂断
