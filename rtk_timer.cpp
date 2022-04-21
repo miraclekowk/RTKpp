@@ -16,7 +16,7 @@ rtk_timer::rtk_timer() {
 }
 
 int rtk_timer::rtk_find_timer() {
-    std::unique_lock<std::mutex> lock(q_mutex);
+    //std::unique_lock<std::mutex> lock(q_mutex);
     int time;
     //循环删除可能已经删除掉的时间节点
     while(!time_queue.empty()){

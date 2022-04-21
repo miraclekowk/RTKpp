@@ -54,7 +54,7 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,r
     if(accpet_fd == -1)
         perror("accept");
 
-    int rc = make_socket_no_blocking(accpet_fd);
+    int rc = make_socket_no_blocking(accpet_fd); //设传输用fd为非阻塞模式
     rtk_request* rq = new rtk_request(path,accpet_fd,epoll_fd);
 
     //增加epoll活跃监听
@@ -85,7 +85,7 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
 
         // remain_size表示缓冲区当前剩余可写入字节数
         remain_size = std::min(MAX_BUF - (rq->last - rq->pos) - 1, MAX_BUF - rq->last % MAX_BUF);
-
+        /// bug4 参数一是5则可以读
         n_read = read(rq->fd,plast,remain_size);
         //读到文件结束符或没有可读数据  断开tcp连接
         if(n_read == 0){
@@ -117,9 +117,10 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
 
         rtk_response* rsp;  //开始根据request生成一个response
         ///这里不理解为啥要继续尝试? 因此改成直接出去断连
+        ///错误的文件路径你也得给他返回一个response吧
         if(rsp->error_file_path(&sbuf,filename,rq->fd)){
-            //continue;  //找不到文件，可能是fiename文件解析问题，继续尝试
-            goto err;
+            continue;  //找不到文件，可能是fiename文件解析问题，继续尝试
+            //goto err;
         }
         //形成正常响应头
         rsp->rtk_http_handle_head(*rq);
