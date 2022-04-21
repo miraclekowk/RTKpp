@@ -30,8 +30,7 @@ int main() {
     int epoll_fd = rtk_ep->rtk_epoll_create(0);
 
     //初始化request --为了把listen_fd加入epoll事件监听中
-    ///这里request的fd有问题
-    rtk_request* request = new rtk_request(conf.root);
+    rtk_request* request = new rtk_request(conf.root,listen_fd,epoll_fd);
     rtk_ep->rtk_epoll_add(epoll_fd,listen_fd,request,(EPOLLIN | EPOLLET));
 
     //初始化线程池
@@ -49,7 +48,7 @@ int main() {
         int events_num = rtk_ep->rtk_epoll_wait(epoll_fd,MAXEVENTS,-1);
 
         //处理已超时请求
-        timer->rtk_handle_expire_time();
+        //timer->rtk_handle_expire_time();
 
         //分发任务给worker线程
         rtk_ep->distribute_events(epoll_fd,listen_fd,events_num,conf.root,tp,timer);

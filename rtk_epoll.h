@@ -23,9 +23,10 @@
 
 class rtk_epoll{
 public:
-    struct epoll_event events_list[MAXEVENTS];
+    epoll_event events_list[MAXEVENTS];
 
     std::mutex add_mutex;
+    int epoll_fd;
 public:
 
     void accept_connection(int linsten_fd,int epoll_fd,std::string path,rtk_timer* timer);

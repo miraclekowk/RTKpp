@@ -55,8 +55,9 @@ public:
     int http_minor;
 
     std::unordered_map<std::string,std::string> head_list; //存储请求头具体类别
-
-    rtk_request(std::string path);
+    //这样的构造函数无意义，因为不可能传递一个fd为0的请求
+    //rtk_request(std::string path);
+    rtk_request(std::string path,int fd,int epoll_fd);
     ~rtk_request();
 
     //关闭fd，释放请求的内存

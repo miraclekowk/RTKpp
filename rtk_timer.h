@@ -23,25 +23,26 @@ public:
     struct time_node{
         size_t timeout_val;
         bool delected;
-        time_handle_func handler;
         rtk_request* request;
+        time_handle_func handler;
 
-        bool operator<(const time_node *a) const{
-            return this->timeout_val > a->timeout_val;  //小顶堆
+
+        bool operator<(const time_node &a) const{
+            return timeout_val > a.timeout_val;  //小顶堆
         };
     };
 
-
-    std::unordered_map<rtk_request*,time_node*> request_to_timer; //存储request到time_node的对应关系
+    std::unordered_map<rtk_request*,std::shared_ptr<time_node>> request_to_timer; //存储request到time_node的对应关系
 
     rtk_timer();
     ~rtk_timer();
 public:
 
-    std::priority_queue<time_node*> time_queue;
+
+    std::priority_queue<std::shared_ptr<time_node>> time_queue;
     size_t rtk_current_timer;  //当前时间
 
-    std::mutex q_mutex; //protect queue
+    //std::mutex q_mutex; //protect queue
 
 
 public:

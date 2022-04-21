@@ -30,9 +30,9 @@ std::unordered_map<std::string,std::string> rtk_mime_type = {
 };
 
 
-rtk_request::rtk_request(std::string path):root(path),fd(0), epoll_fd(0),pos(0),last(0),state(0){
+rtk_request::rtk_request(std::string path,int fd,int epoll_fd):root(path),fd(fd),epoll_fd(epoll_fd),last(0),state(0){
 
-};
+}
 
 rtk_request::~rtk_request() {
     this->RTK_close();

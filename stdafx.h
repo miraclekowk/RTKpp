@@ -15,6 +15,7 @@
 #include <queue>
 #include <cmath>
 #include <vector>
+#include <memory>
 
 
 //common UNIX-api

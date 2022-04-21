@@ -16,10 +16,11 @@ int rtk_epoll::rtk_epoll_create(int flag) {
     return epoll_fd;
 };
 
+
 int rtk_epoll::rtk_epoll_add(int epoll_fd, int fd, rtk_request* rq, int events) {
-    struct epoll_event ev;
-    ev.data.ptr = (void*)rq;
-    ev.data.fd = fd;
+    epoll_event ev;
+    ///void* ptr and int fd both are inside a union inside the struct epoll_event.You should use either of them not both.
+    ev.data.ptr = rq;
     ev.events = events;
     int res = epoll_ctl(epoll_fd,EPOLL_CTL_ADD,fd,&ev);
     if(res == -1)
@@ -54,7 +55,7 @@ void rtk_epoll::accept_connection(int listen_fd,int epoll_fd, std::string path,r
         perror("accept");
 
     int rc = make_socket_no_blocking(accpet_fd);
-    rtk_request* rq = new rtk_request(path);
+    rtk_request* rq = new rtk_request(path,accpet_fd,epoll_fd);
 
     //增加epoll活跃监听
     rtk_epoll_add(epoll_fd,accpet_fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
@@ -143,14 +144,12 @@ void rtk_epoll::distribute_events(int epoll_fd, int listen_fd, int events_num,
     for(int i = 0;i < events_num;i++){
 
         rtk_request* rq = (rtk_request *)(events_list[i].data.ptr);  ///第一次建立连接是0 is ok
-        int fd = events_list[i].data.fd;
+        int fd = rq->fd; //这里给的是request中包含的fd而不是活跃的event中的fd
 
         if(fd == listen_fd){
 
             accept_connection(listen_fd,epoll_fd,path,timer);
 
-            //auto accpet_tsk = std::bind(&rtk_epoll::accept_connection,this,listen_fd,epoll_fd,path,timer);
-            //tp->addTask(accpet_tsk);  //报错Segmentation Fault
         }else{
             //error is like 0x008,use &,if the result is 1,indicate events is belong to this type of error
             //EPOLLHUP -- 文件被挂断
