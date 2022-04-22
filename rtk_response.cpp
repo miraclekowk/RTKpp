@@ -24,9 +24,9 @@ rtk_response::~rtk_response() {
 //headers形如  Connection:keep-alive
 int rtk_response::rtk_http_ignore(){return 0;};
 
-int rtk_response::rtk_http_connection(rtk_request rq,std::string value){this->keep_alive = (value == "keep-alive")?1:0;return 0;}
+int rtk_response::rtk_http_connection(rtk_request* rq,std::string value){this->keep_alive = (value == "keep-alive")?1:0;return 0;}
 
-int rtk_response::rtk_http_if_modified(rtk_request rq,std::string value){
+int rtk_response::rtk_http_if_modified(rtk_request* rq,std::string value){
     struct tm tm;
     //c++的string转换成char*以适配strptime接口
     if(strptime(value.c_str(),"%a %d %b %Y %H:%M:%S GMT",&tm) == (char*)NULL){
@@ -44,13 +44,13 @@ int rtk_response::rtk_http_if_modified(rtk_request rq,std::string value){
 }
 
 //这里直接查map，相比handle控制效率高一些
-void rtk_response::rtk_http_handle_head(rtk_request rq) {
-    if(rq.head_list.find("Host")!= rq.head_list.end()){
+void rtk_response::rtk_http_handle_head(rtk_request* rq) {
+    if(rq->head_list.find("Host")!= rq->head_list.end()){
         rtk_http_ignore();
-    }else if(rq.head_list.find("Connection") != rq.head_list.end()){
-        rtk_http_connection(rq,rq.head_list["Connection"]);
-    }else if(rq.head_list.find("If_Modified_Since") != rq.head_list.end()){
-        rtk_http_if_modified(rq,rq.head_list["If_Modified_Since"]);
+    }else if(rq->head_list.find("Connection") != rq->head_list.end()){
+        rtk_http_connection(rq,rq->head_list["Connection"]);
+    }else if(rq->head_list.find("If_Modified_Since") != rq->head_list.end()){
+        rtk_http_if_modified(rq,rq->head_list["If_Modified_Since"]);
     }else{
         rtk_http_ignore();
     }
@@ -110,7 +110,7 @@ int rtk_response::error_file_path(struct stat* sbufptr,std::string filename,int 
 
 
 //处理静态文件(主要是读取)
-void rtk_response::serve_static(rtk_request rq, std::string filename, size_t filesize) {
+void rtk_response::serve_static(rtk_request* rq, std::string filename, size_t filesize) {
     char header[MAXLINE];
     char buff[MAXLINE];
     struct tm tm;
@@ -128,7 +128,7 @@ void rtk_response::serve_static(rtk_request rq, std::string filename, size_t fil
     //修改过
     if(this->modified){
         // 得到文件类型并填充Content-type字段
-        const char* filetype =   rq.req_file_type.c_str();
+        const char* filetype =   rq->req_file_type.c_str();
         sprintf(header, "%sContent-type: %s\r\n", header, filetype);
         // 通过Content-length返回文件大小
         sprintf(header, "%sContent-length: %zu\r\n", header, filesize);
@@ -137,7 +137,7 @@ void rtk_response::serve_static(rtk_request rq, std::string filename, size_t fil
         strftime(buff, SHORTLINE,  "%a, %d %b %Y %H:%M:%S GMT", &tm);
         sprintf(header, "%sLast-Modified: %s\r\n", header, buff);
     }
-    sprintf(header, "%sServer : TKeed\r\n", header);
+    sprintf(header, "%sServer : RTKpp\r\n", header);
 
     //空行（must）
     sprintf(header, "%s\r\n", header);

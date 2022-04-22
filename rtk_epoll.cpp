@@ -115,7 +115,7 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
 
         filename = rq->parse_uri();
 
-        rtk_response* rsp;  //开始根据request生成一个response
+        rtk_response* rsp = new rtk_response(rq->fd);  //开始根据request生成一个response
         ///这里不理解为啥要继续尝试? 因此改成直接出去断连
         ///错误的文件路径你也得给他返回一个response吧
         if(rsp->error_file_path(&sbuf,filename,rq->fd)){
@@ -123,9 +123,9 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
             //goto err;
         }
         //形成正常响应头
-        rsp->rtk_http_handle_head(*rq);
+        rsp->rtk_http_handle_head(rq);
 
-        rsp->serve_static(*rq,filename,sbuf.st_size);
+        rsp->serve_static(rq,filename,sbuf.st_size);
 
         if(!rsp->keep_alive)
             goto close;
