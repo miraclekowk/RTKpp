@@ -59,8 +59,8 @@ void rtk_threadpool::runTask() {
             //加锁互斥锁
             std::unique_lock<std::mutex> lk(_mutex);
 
-            //任务空
             ///尝试拿锁，拿到了说明轮到本线程执行了
+            //任务空
             while (this->isEmpty) {
                 cond.wait(lk);
             }
@@ -75,7 +75,7 @@ void rtk_threadpool::runTask() {
             isFull = false;
         }
         //执行任务
-        //ta.func(ta.arg); //原先使用函数指针，不太对，这里学习c++写法 typedef function<返回值>
+        //ta.func(ta.arg); //原先使用函数指针,这里学习c++写法 typedef function<返回值>
         ta();   //利用bind(funcName,args)来带参数执行
 
         cond.notify_one();

@@ -48,7 +48,7 @@ int main() {
         int events_num = rtk_ep->rtk_epoll_wait(epoll_fd,MAXEVENTS,-1);
 
         //处理已超时请求
-        //timer->rtk_handle_expire_time();
+        timer->rtk_handle_expire_time();
 
         //分发任务给worker线程
         rtk_ep->distribute_events(epoll_fd,listen_fd,events_num,conf.root,tp,timer);
@@ -56,10 +56,6 @@ int main() {
     }
 
     std::cout<<"RTKpp server is closing..."<<std::endl;
-
-    free(rtk_ep);
-    free(tp);
-    free(timer);
 
     return 0;
 }

@@ -149,7 +149,7 @@ void rtk_response::serve_static(rtk_request* rq, std::string filename, size_t fi
         return;
     }
 
-    //发送文件主体
+    //发送html文件主体
     int request_file_fd = open(filename.c_str(),O_RDONLY,0);
     //利用mmap函数完成映射，加快处理速度
     void* src_addr  = mmap(NULL,filesize,PROT_READ,MAP_PRIVATE,request_file_fd,0);

@@ -24,7 +24,7 @@
 
 class rtk_threadpool{
 public:
-    ///c++11新特性
+    ///c++11
     typedef std::function<void()> task;
 
     rtk_threadpool();

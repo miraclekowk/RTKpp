@@ -26,6 +26,9 @@ public:
         rtk_request* request;
         time_handle_func handler;
 
+        time_node(size_t timeout,bool delected,rtk_request* request1,time_handle_func handleFunc):timeout_val(timeout),delected(delected)
+        ,request(request1),handler(handleFunc){};
+
 
         bool operator<(const time_node &a) const{
             return timeout_val > a.timeout_val;  //小顶堆
