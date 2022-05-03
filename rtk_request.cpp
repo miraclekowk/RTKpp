@@ -423,9 +423,14 @@ std::string rtk_request::parse_uri() {
 };
 
 
+//void rtk_request::RTK_close(rtk_request* rq) {
+//    close(rq->fd);
+//    delete rq;
+//};
+
 void rtk_request::RTK_close() {
     close(this->fd);
-   // delete this;
+    //delete this;
 };
 
 

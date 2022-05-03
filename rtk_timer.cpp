@@ -7,7 +7,7 @@
 void rtk_timer::rtk_timer_update() {
     //获取当前时间
     struct timeval tv;
-    int rc = gettimeofday(&tv,NULL); ///参数解释：
+    int rc = gettimeofday(&tv,NULL); ///参数解释: ...
     rtk_current_timer = (tv.tv_sec* 1000)+(tv.tv_usec / 1000);
 }
 
@@ -62,7 +62,7 @@ void rtk_timer::rtk_del_timer(rtk_request *rq) {
 //        return -1;
 
     ///!!! need to  quickly find tm_ptr,so time_queue have to cache pointer instead of node
-    request_to_timer[rq]->delected = true; //惰性删除，先只改变标记位，rtk_handle_expire_time()中统一删
+    request_to_timer[rq]->delected = true; //惰性删除，先只改变标记位，handle_expire_time和find_timer中统一删
     ///效率可能很有影响,后续优化
     request_to_timer.erase(rq);  //reduce time_node shared_ptr reference 删后只剩queue中的一份shared_ptr了
 

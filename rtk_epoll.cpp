@@ -132,7 +132,7 @@ void rtk_epoll::do_request(rtk_request* rq,rtk_timer* timer){
     }
     //一次请求响应结束后不立即断开连接，对应一个文件需要多个http包的场景，等待后续请求包
     rtk_epoll_mod(rq->epoll_fd,rq->fd,rq,(EPOLLIN | EPOLLET | EPOLLONESHOT));
-    timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,*rq));
+    timer->rtk_add_timer(rq,TIMEOUT_DEFAULT,std::bind(&rtk_request::RTK_close,rq));
     return;
 
     err:
